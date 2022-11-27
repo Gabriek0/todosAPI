@@ -109,7 +109,19 @@ app.patch("/todos/:id/done", checksExistsUserAccount, (request, response) => {
 });
 
 app.delete("/todos/:id", checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  const { id } = request.params;
+
+  const { user } = request;
+
+  const todoIndex = user.todos.findIndex((td) => td.id === id);
+
+  if (todoIndex === -1) {
+    return response.status(404).json({ error: "Todo not exists" });
+  }
+
+  user.todos.splice(todoIndex, 1);
+
+  return response.status(204).send();
 });
 
 module.exports = app;
